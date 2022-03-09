@@ -1,0 +1,75 @@
+Hello Everyone, and welcome to my lab of me documenting my homelab projects and the progress I make! I hope this information is helpful and displays my skillset!
+
+In this lab I will be using Vmware Workstation 16 as my hypervisor. I have now upgraded to VMware Workstation Pro, after successfully work on this lab, and made the commitment to purchasing the pro software.
+
+1.)Installing Pfsense
+
+In this lab I configured as a pfsense firewall to segment my private homelab network. It will only be accessible from my Kali Linux Machine. 
+
+I allocated 2GB Ram for memory, made 6 network adapters and set all of them to custom specific virtual networks (Vmnet 1-6) After that, I  assigned IP addresses for the network for the other virtual machines in the lab. 
+
+Set the interface IP addresses to other Vm’s in the lab
+Option 2 (Set Interfaces IP) Started with WAN and LAN(192.168.1.1). The Lan Ip address will be used to access the pfsense WebBUi which will be used through my machine that is running Kali Linux. 
+
+I also left "OPT3"(which is the 5th network) Interface without an Ip because it is going to have the span port with traffic that Security Onion will be monitoring from my victim network.
+
+2.) Configuring Security Onion
+
+Security onion will be the all-in-one IDc, Security Monitoring and Logmanagement solution. 
+
+I first downloaded the Security Onion ISO, after downloading I setup my virtual machine, set it up with Linux, Version CentOS 7 64bit and allocated 400GB disk size.
+
+I had issues with allocating such a large disk size, which made me install my 1TB HDD from my previous desktop I use to use. I wiped that HDD, and installed it into my desktop. It came with some minor issues, because I started to mess around with the file PATHs, but I fresh installed everything, and when I got back to this point everything was working smoothly. 
+
+Another issue that arose was at the time I was setting up this lab, I only has 8GB of memory. This slowed my PC down tremendously to the point where I had to purchase more RAM and install it into my PC. After installing my upgraded RAM, everything ran smoothly. 
+
+After all those hardware upgrades, and finally setting up my VM, I could finally run Security Onion smoothly. I set my usename & Password and went into the setup. I used the standard installation process, and mostly default settings, used DHCP to configure the management interface rather than setting a static IPv4 address simply because of "flexibility" in practice for devices that would typically come and go on a network.
+
+
+After all the intial setup, I kept note of the IP address which will be utilized later for web access.
+
+I needed to set up a corresponding machine to have acces to the web interface. Which will be used from an external Ubuntu Desktop. The purpose of this was to simulate a SOC or Security Analyst accessing a SIEM or any other type of tool from their device.  
+
+I installed Ubuntu Desktop, and logged into my desktop. 
+
+I wanted to grab the Ip adress from the machine, so I did "ifconfig", which I received a command not found message. 
+
+To be able to use ifconfig I had to download net-tools, u sing "sudo apt install net-tools". 
+
+After obtaining the machine's IP Address I can head back to Security Onion and use the so-allow command.
+
+This allowed me to add a new firewall rule to allow connections from a new IP address, and I gave the ip the role of an Analyst. 
+
+After this, I should be able to connect to Log into the Security Onion web interface. Which I can now access and look at Alerts,Hunt and request PCAP files.
+
+3.) Configuring Kali Linux machine
+
+The purpose of my Kali linux machine will be to be used as an attack machine. It will be used to attack the Domain controller and any other machines that are attached it it. 
+
+First thing I have to do is download the Kali Linux ISO. Once downloaded, I set the Network adapter to one of my custom networks (Vmnet2) and set the memory to 4GB. 
+
+Once I have access to the machine, I needed to go into the terminal and change the password from the default password just for secure practices. using the command "passwd". 
+
+4.) Configuring PFSense interface & Firewall Rules
+
+To start off with configuring I will go to the Kali Linux machine that I just configured. I will head over to the IP 192.168.1.1, which was configured early to access the pfsense webGUI. 
+
+On the webpage you have the default usename and password of "Admin" and pfsense, so I log in, and change the password. 
+
+In the pfsense setup I set my primary DNS server to 8.8.8.8 and my secondary server to 8.8.4.4 which is google's public DNS.
+
+After all the setup, I went into my interface settings and changed the General Configuration description description of "VMnet" 
+Switching LAN to "Kali"
+Vmnet3 to my "Victimenetwork",
+Vmnet4 to "SecurityOnion", 
+Vmnet5 to "SpanPort" 
+// This option isn't assigned an Ip address, but we did assign an interface so it seems like it isn't enabled, so we have to tick the "Enable Interface" box.
+and the last Vmnet6 to "Splunk".
+
+After applying the changes, I checked the Interface Assignments to make sure everything looks correct!
+
+Following that, I went to bridges, and set the member interface to "Victimnetwork". Which utilizes "spanport" as the spanport and saved the bridge. 
+
+5.) Building An Active Directory Lab for Security Monitoring
+
+Reference: Throughout the proccess I was following "cyberwox" youtube channel to create a Cybersecurity Detection lab. 
