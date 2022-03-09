@@ -1,0 +1,9 @@
+Built My PC, ages ago. Recent Additions are 1TB HDD from old desktop with SDD,  Swapped out 8GB RAM to 32GB
+Installing Pfsense
+Configured as a firewall to segment our private homelab network and will only be accessible from my Kali Linux Machine
+2GB Ram for memory 
+Made 6 Network Adapters and set all of them to custom specific virtual networks (Vmnet 1-6)
+Assigned IP addresses for the network for the other virtual machines in the lab
+Set the interface IP addresses to other Vm’s in the lab
+Option 2 (Set Interfaces IP) Started with WAN and LAN
+Left the OPT3 Interface without an Ip because it is going to have the span port with traffic that Security Onion will be monitoring from my victim network
