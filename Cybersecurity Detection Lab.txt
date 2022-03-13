@@ -70,6 +70,49 @@ After applying the changes, I checked the Interface Assignments to make sure eve
 
 Following that, I went to bridges, and set the member interface to "Victimnetwork". Which utilizes "spanport" as the spanport and saved the bridge. 
 
-5.) Building An Active Directory Lab for Security Monitoring
+5.) Configuring a Windows Server as a Domain Controller
+
+The goal is to set up an Active directory (jeff.local) with the windows 2019 server as the Domain controller with 2 windows machines. 
+
+After installing the copies, install I installed the machine and powered it up. It was as imple install, and simply had to make sure the network adapter was connected to the victim network.
+
+During the install I did a custom install, created the administrator account. 
+
+Once that was complete, I signed into the computer, and was int he "Server Manager" screen.
+
+// *My notes on my next process, currently re-writing to be more write-up friendly*
+
+Building an Active Directory Lab for Security Monitoring (Configuring a windows server as our Domain Controller)
+Set up an Active Directory domain with a Windows 2019 server as the domain controller and 2 windows machines.
+Custom, set to Vmnet3 
+Windows server 2019 standard evaluation
+Setup Admin and password
+Renamed to clearly identify it was my domain controller
+Manage-> Roles and feature -> Added  Active Directory Domain services
+Promote server to a domain controller
+Setup AD Certificate Services
+Adding a user to the domain
+Server Manager -> Tools -> AD Users & Computers 
+Select domain Jeff.local
+Users-> new user
+Disable Firewall (Lab environment, trying to have weak configurations to mess around with).
+Add Pfsense machine as the default gateway for our domain controller
+Adding a User to an Active Directory Domain
+-
+Forwarding Windows Event Logs to Splunk Using Universal Forwarder
+Go to splunk site on splunk machine
+Settings ->forwarding and receiving
+New receiving port, and set the port you want to listen (9997)
+Create and index (wineventlog)
+ 
+Sysmon, winlogbeat *security onion
+In secure onion terminal sudo so-allow
+B logstash beat
+Ip 192.168.x.x
+When we update this it’ll take some time to update firewall configuration in security onion and when it is done it’ll be able to accept beats traffic from that ip or network.(submit traffic via plain text.)
+
+
+
+
 
 Reference: Throughout the proccess I was following "cyberwox" youtube channel to create a Cybersecurity Detection lab. 
